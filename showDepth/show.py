@@ -8,7 +8,7 @@ assert len(sys.argv) > 1
 
 def convert_yuv(h, w, msg,convertname):
     gray=np.frombuffer(msg[:h*w*2],dtype='uint16').reshape((h,w)).astype('int32')
-    gray=gray>>2
+    gray=gray>>4
     img_b= img_g = img_r=gray.clip(0,255).astype('uint8')
     img=np.dstack([img_b[:,:,None],img_g[:,:,None],img_r[:,:,None]])
 
@@ -25,11 +25,11 @@ for path in glob(os.path.join(sys.argv[1], '*.raw')):
         data = file.read()
         convertname = 'transfer/'+file.name.replace('raw','png').replace('resource/','')
         print(convertname)
-    height = 480
+    height = 400
     width = 640
     img = convert_yuv(height, width, data,convertname)
     print(img.shape)
-    cv2.imshow('image', img)
+    cv2.imshow(file.name, img)
     key = cv2.waitKey() & 0xff
     if key == ord('q'):
         exit()
